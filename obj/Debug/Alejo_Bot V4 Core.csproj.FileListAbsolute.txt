@@ -1,0 +1,6 @@
+d:\users\alejo\documents\visual studio 2017\Projects\Alejo_Bot V4 Core\Alejo_Bot V4 Core\bin\Debug\Alejo_Bot V4 Core.dll
+d:\users\alejo\documents\visual studio 2017\Projects\Alejo_Bot V4 Core\Alejo_Bot V4 Core\bin\Debug\Alejo_Bot V4 Core.pdb
+d:\users\alejo\documents\visual studio 2017\Projects\Alejo_Bot V4 Core\Alejo_Bot V4 Core\bin\Debug\Newtonsoft.Json.dll
+d:\users\alejo\documents\visual studio 2017\Projects\Alejo_Bot V4 Core\Alejo_Bot V4 Core\bin\Debug\Newtonsoft.Json.xml
+d:\users\alejo\documents\visual studio 2017\Projects\Alejo_Bot V4 Core\Alejo_Bot V4 Core\obj\Debug\Alejo_Bot V4 Core.dll
+d:\users\alejo\documents\visual studio 2017\Projects\Alejo_Bot V4 Core\Alejo_Bot V4 Core\obj\Debug\Alejo_Bot V4 Core.pdb
