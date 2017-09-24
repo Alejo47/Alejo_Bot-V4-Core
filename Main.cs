@@ -505,10 +505,12 @@ namespace Alejo_Bot_V4_Core
         public event EventHandler<AIOEventArgs.UserReSubscriptionEventArgs> UserReSubscription = (sender, e) => { };
         public event EventHandler<AIOEventArgs.UserJoinedChannelEventArgs> UserJoined = (sender, e) => { };
         public event EventHandler<AIOEventArgs.UserPartedChannelEventArgs> UserParted = (sender, e) => { };
-        public event EventHandler<AIOEventArgs.UserTimedOut> UserTimedOut = (sender, e) => { };
-        public event EventHandler<AIOEventArgs.ChannelChatCleared> ChannelChatCleared = (sender, e) => { };
-        public event EventHandler<AIOEventArgs.IRCConnectionClosed> IRCConnectionClosed = (sender, e) => { };
-        public event EventHandler<AIOEventArgs.ClientJoinedChannel> ClientJoinedChannel = (sender, e) => { };
+        public event EventHandler<AIOEventArgs.UserTimedOutEventArgs> UserTimedOut = (sender, e) => { };
+        public event EventHandler<AIOEventArgs.ChannelChatClearedEventArgs> ChannelChatCleared = (sender, e) => { };
+        public event EventHandler<AIOEventArgs.IRCConnectionClosedEventArgs> IRCConnectionClosed = (sender, e) => { };
+        public event EventHandler<AIOEventArgs.ClientJoinedChannelEventArgs> ClientJoinedChannel = (sender, e) => { };
+        public event EventHandler<AIOEventArgs.PingReceivedEventArgs> PingReceived = (sender, e) => { };
+        public event EventHandler<AIOEventArgs.PongSentEventArgs> PongSent = (sender, e) => { };
         #endregion
 
         private async Task BufferReader()
@@ -519,8 +521,21 @@ namespace Alejo_Bot_V4_Core
                 {
                     if (Buffer.StartsWith("PING"))
                     {
+                        {
+                            AIOEventArgs.PingReceivedEventArgs Arguments = new AIOEventArgs.PingReceivedEventArgs()
+                            {
+                                time = DateTime.Now
+                            };
+                            PingReceived(this, Arguments);
+                        }
                         Writer.WriteLine(Buffer.Replace("PING", "PONG"));
-                        //Console.WriteLine("PING!");
+                        {
+                            AIOEventArgs.PongSentEventArgs Arguments = new AIOEventArgs.PongSentEventArgs()
+                            {
+                                time = DateTime.Now
+                            };
+                            PongSent(this, Arguments);
+                        }
                     }
                     else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[#a-zA-Z0-9-_:\\\\\\.\\/\\$,!]{0,})(;|))+ :[a-zA-Z0-9_]{3,25}![a-zA-Z0-9_]{3,25}@[a-zA-Z0-9_]{3,25}.tmi.twitch.tv PRIVMSG #[a-zA-Z0-9_]{3,25} :"))
                     {
@@ -535,7 +550,7 @@ namespace Alejo_Bot_V4_Core
                                 Arguments.Tags.Add(Tag.Split('=')[0], Tag.Split('=')[1]);
                             }
                         }
-                        MessageReceived(new object(), Arguments);
+                        MessageReceived(this, Arguments);
                     }
                     else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[#a-zA-Z0-9-_:\\\\\\.\\/\\$,!]{0,})(;|))+ :tmi.twitch.tv USERNOTICE #[a-zA-Z0-9_]{3,25}"))
                     {
@@ -550,7 +565,7 @@ namespace Alejo_Bot_V4_Core
                                 Arguments.Tags.Add(Tag.Split('=')[0], Tag.Split('=')[1]);
                             }
                         }
-                        UserReSubscription(new object(), Arguments);
+                        UserReSubscription(this, Arguments);
                     }
                     else if (Regex.IsMatch(Buffer, "^:[a-zA-Z0-9_]{3,25}![a-zA-Z0-9_]{3,25}@[a-zA-Z0-9_]{3,25}.tmi.twitch.tv JOIN #[a-zA-Z0-9_]{3,25}$"))
                     {
@@ -559,7 +574,7 @@ namespace Alejo_Bot_V4_Core
                             Username = Buffer.Split('!')[0].Remove(0, 1),
                             Channel = Buffer.Split('#')[1]
                         };
-                        UserJoined(new object(), Arguments);
+                        UserJoined(this, Arguments);
                     }
                     else if (Regex.IsMatch(Buffer, "^:[a-zA-Z0-9_]{3,25}![a-zA-Z0-9_]{3,25}@[a-zA-Z0-9_]{3,25}.tmi.twitch.tv PART #[a-zA-Z0-9_]{3,25}$"))
                     {
@@ -568,11 +583,11 @@ namespace Alejo_Bot_V4_Core
                             Username = Buffer.Split('!')[0].Remove(0, 1),
                             Channel = Buffer.Split('#')[1]
                         };
-                        UserParted(new object(), Arguments);
+                        UserParted(this, Arguments);
                     }
                     else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[#a-zA-Z0-9-_:\\\\\\/,]{0,})(;|))+ :tmi.twitch.tv CLEARCHAT #[a-zA-Z0-9_]{3,25} :[a-zA-Z0-9_]{3,25}$"))
                     {
-                        AIOEventArgs.UserTimedOut Arguments = new AIOEventArgs.UserTimedOut();
+                        AIOEventArgs.UserTimedOutEventArgs Arguments = new AIOEventArgs.UserTimedOutEventArgs();
                         {
                             Arguments.Username = Buffer.Split(' ')[4].Remove(0, 1);
                             Arguments.Channel = Buffer.Split(' ')[3].Remove(0, 1);
@@ -582,15 +597,15 @@ namespace Alejo_Bot_V4_Core
                                 Arguments.Tags.Add(Tag.Split('=')[0], Tag.Split('=')[1]);
                             }
                         }
-                        UserTimedOut(new object(), Arguments);
+                        UserTimedOut(this, Arguments);
                     }
                     else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[#a-zA-Z0-9-_:\\/,]{0,})(;|))+ :tmi.twitch.tv CLEARCHAT #[a-zA-Z0-9_]{3,25}$"))
                     {
-                        AIOEventArgs.ChannelChatCleared Arguments = new AIOEventArgs.ChannelChatCleared();
+                        AIOEventArgs.ChannelChatClearedEventArgs Arguments = new AIOEventArgs.ChannelChatClearedEventArgs();
                         {
                             Arguments.Channel = Buffer.Split(' ')[3].Remove(0, 1);
                         }
-                        ChannelChatCleared(new object(), Arguments);
+                        ChannelChatCleared(this, Arguments);
                     }
                     else if (Regex.IsMatch(Buffer, "^@(([a-zA-Z0-9-_]+=[#a-zA-Z0-9-_:\\/,]{0,})(;|))+ :tmi.twitch.tv ROOMSTATE #[a-zA-Z0-9_]{3,25}$"))
                     {
@@ -643,13 +658,13 @@ namespace Alejo_Bot_V4_Core
                                 Channel.followersOnly = Convert.ToInt32(Tags["followers-only"]);
                                 Channel.slow = Convert.ToInt32(Tags["slow"]);
                                 Channels.Add(Buffer.Split(' ')[3].Remove(0, 1), Channel);
-                                AIOEventArgs.ClientJoinedChannel Arguments = new AIOEventArgs.ClientJoinedChannel()
+                                AIOEventArgs.ClientJoinedChannelEventArgs Arguments = new AIOEventArgs.ClientJoinedChannelEventArgs()
                                 {
                                     channel = Buffer.Split(' ')[3].Remove(0, 1),
                                     channelData = Channel,
                                     ID = Tags["room-id"]
                                 };
-                                ClientJoinedChannel(new object(), Arguments);
+                                ClientJoinedChannel(this, Arguments);
                                 JoinedChannels.Add(Buffer.Split(' ')[3].Remove(0, 1));
                             }
                         }
@@ -697,7 +712,7 @@ namespace Alejo_Bot_V4_Core
                 if (!JoinedChannels.Contains(Channel))
                 {
                     await Writer.WriteLineAsync("JOIN #" + Channel);
-                    ClientJoinedChannel(new object(), new AIOEventArgs.ClientJoinedChannel()
+                    ClientJoinedChannel(this, new AIOEventArgs.ClientJoinedChannelEventArgs()
                     {
                         channel = Channel
                     });
@@ -789,7 +804,7 @@ namespace Alejo_Bot_V4_Core
                 SendRaw("QUIT");
                 connected = false;
                 TcpC.Close();
-                IRCConnectionClosed(new object(), new AIOEventArgs.IRCConnectionClosed());
+                IRCConnectionClosed(this, new AIOEventArgs.IRCConnectionClosedEventArgs());
             }
             else
             {
@@ -873,25 +888,33 @@ namespace Alejo_Bot_V4_Core
             public string Channel { get; set; }
             public string Username { get; set; }
         }
-        public class ChannelChatCleared : EventArgs
+        public class ChannelChatClearedEventArgs : EventArgs
         {
             public string Channel { get; set; }
         }
-        public class UserTimedOut : EventArgs
+        public class UserTimedOutEventArgs : EventArgs
         {
             public string Channel { get; set; }
             public string Username { get; set; }
             public Dictionary<string, string> Tags { get; set; }
         }
-        public class IRCConnectionClosed : EventArgs
+        public class IRCConnectionClosedEventArgs : EventArgs
         {
             public DateTime time { get; set; }
         }
-        public class ClientJoinedChannel : EventArgs
+        public class ClientJoinedChannelEventArgs : EventArgs
         {
             public string channel { get; set; }
             public AIOObjects.IRC.Channel channelData { get; set; }
             public string ID { get; set; }
+        }
+        public class PingReceivedEventArgs : EventArgs
+        {
+            public DateTime time { get; set; }
+        }
+        public class PongSentEventArgs : EventArgs
+        {
+            public DateTime time { get; set; }
         }
     }
     #endregion
