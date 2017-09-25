@@ -459,6 +459,7 @@ namespace Alejo_Bot_V4_Core
         private static StreamWriter Writer;
         public static List<string> JoinedChannels = new List<string>();
 
+
         public IRCClient(string Username, string Token)
         {
             connected = true;
@@ -497,6 +498,33 @@ namespace Alejo_Bot_V4_Core
                 Join(Chan);
             }
 
+            BufferReader();
+        }
+        public void Reconnect(string Username, string Token, string[] Channels)
+        {
+            SendRaw("QUIT");
+            connected = false;
+            Writer.Dispose();
+            Reader.Dispose();
+            TcpC.Close();
+            connected = true;
+            TcpC = new TcpClient();
+            TcpC.Connect("irc.chat.twitch.tv", 6667);
+            Reader = new StreamReader(TcpC.GetStream());
+            Writer = new StreamWriter(TcpC.GetStream())
+            {
+                AutoFlush = true
+            };
+            Writer.WriteLine("CAP REQ :twitch.tv/membership");
+            Writer.WriteLine("CAP REQ :twitch.tv/tags");
+            Writer.WriteLine("CAP REQ :twitch.tv/commands");
+            Writer.WriteLine("PASS " + Token);
+            Writer.WriteLine("NICK " + Username);
+
+            foreach (string Chan in Channels)
+            {
+                Writer.WriteLine("JOIN #" + Chan);
+            }
             BufferReader();
         }
 
@@ -764,7 +792,7 @@ namespace Alejo_Bot_V4_Core
             }
         }
 
-        public void Join(string Channel, TwitchAPIConnection API = null)
+        public void Join(string Channel)
         {
             Channel = Channel.ToLower();
             if (connected)
