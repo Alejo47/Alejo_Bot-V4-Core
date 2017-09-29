@@ -565,7 +565,7 @@ namespace Alejo_Bot_V4_Core
                             PongSent(this, Arguments);
                         }
                     }
-                    else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[#a-zA-Z0-9-_:\\\\\\.\\/\\$,!]{0,})(;|))+ :[a-zA-Z0-9_]{3,25}![a-zA-Z0-9_]{3,25}@[a-zA-Z0-9_]{3,25}.tmi.twitch.tv PRIVMSG #[a-zA-Z0-9_]{3,25} :"))
+                    else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[^; ]{0,})(;|))+ :[a-zA-Z0-9_]{3,25}![a-zA-Z0-9_]{3,25}@[a-zA-Z0-9_]{3,25}.tmi.twitch.tv PRIVMSG #[a-zA-Z0-9_]{3,25} :"))
                     {
                         AIOEventArgs.MessageReceivedEventArgs Arguments = new AIOEventArgs.MessageReceivedEventArgs();
                         {
@@ -580,7 +580,7 @@ namespace Alejo_Bot_V4_Core
                         }
                         MessageReceived(this, Arguments);
                     }
-                    else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[#a-zA-Z0-9-_:\\\\\\.\\/\\$,!]{0,})(;|))+ :tmi.twitch.tv USERNOTICE #[a-zA-Z0-9_]{3,25}"))
+                    else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[^; ]{0,})(;|))+ :tmi.twitch.tv USERNOTICE #[a-zA-Z0-9_]{3,25}"))
                     {
                         AIOEventArgs.UserReSubscriptionEventArgs Arguments = new AIOEventArgs.UserReSubscriptionEventArgs();
                         {
@@ -613,7 +613,7 @@ namespace Alejo_Bot_V4_Core
                         };
                         UserParted(this, Arguments);
                     }
-                    else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[#a-zA-Z0-9-_:\\\\\\/,]{0,})(;|))+ :tmi.twitch.tv CLEARCHAT #[a-zA-Z0-9_]{3,25} :[a-zA-Z0-9_]{3,25}$"))
+                    else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[^; ]{0,})(;|))+ :tmi.twitch.tv CLEARCHAT #[a-zA-Z0-9_]{3,25} :[a-zA-Z0-9_]{3,25}$"))
                     {
                         AIOEventArgs.UserTimedOutEventArgs Arguments = new AIOEventArgs.UserTimedOutEventArgs();
                         {
@@ -627,7 +627,7 @@ namespace Alejo_Bot_V4_Core
                         }
                         UserTimedOut(this, Arguments);
                     }
-                    else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[#a-zA-Z0-9-_:\\/,]{0,})(;|))+ :tmi.twitch.tv CLEARCHAT #[a-zA-Z0-9_]{3,25}$"))
+                    else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[^; ]{0,})(;|))+ :tmi.twitch.tv CLEARCHAT #[a-zA-Z0-9_]{3,25}$"))
                     {
                         AIOEventArgs.ChannelChatClearedEventArgs Arguments = new AIOEventArgs.ChannelChatClearedEventArgs();
                         {
@@ -635,7 +635,7 @@ namespace Alejo_Bot_V4_Core
                         }
                         ChannelChatCleared(this, Arguments);
                     }
-                    else if (Regex.IsMatch(Buffer, "^@(([a-zA-Z0-9-_]+=[#a-zA-Z0-9-_:\\/,]{0,})(;|))+ :tmi.twitch.tv ROOMSTATE #[a-zA-Z0-9_]{3,25}$"))
+                    else if (Regex.IsMatch(Buffer, "^@(([a-z-_]+=[^; ]{0,})(;|))+ :tmi.twitch.tv ROOMSTATE #[a-zA-Z0-9_]{3,25}$"))
                     {
                         try
                         {
