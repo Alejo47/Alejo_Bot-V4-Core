@@ -531,6 +531,8 @@ namespace Alejo_Bot_V4_Core
         #region Events
         public event EventHandler<AIOEventArgs.MessageReceivedEventArgs> MessageReceived = (sender, e) => { };
         public event EventHandler<AIOEventArgs.UserReSubscriptionEventArgs> UserReSubscription = (sender, e) => { };
+        public event EventHandler<AIOEventArgs.HostStartedEventArgs> HostStarted = (sender, e) => { };
+        public event EventHandler<AIOEventArgs.HostEndedEventArgs> HostEnded = (sender, e) => { };
         public event EventHandler<AIOEventArgs.UserJoinedChannelEventArgs> UserJoined = (sender, e) => { };
         public event EventHandler<AIOEventArgs.UserPartedChannelEventArgs> UserParted = (sender, e) => { };
         public event EventHandler<AIOEventArgs.UserTimedOutEventArgs> UserTimedOut = (sender, e) => { };
@@ -700,6 +702,23 @@ namespace Alejo_Bot_V4_Core
                         {
                             Console.WriteLine(Ex.Message);
                         }
+                    }
+                    else if (Regex.IsMatch(Buffer, "^@msg-id=host_on :tmi.twitch.tv NOTICE #[a-zA-Z0-9_]{3,25} :Now hosting [a-zA-Z0-9_]{3,25}"))
+                    {
+                        AIOEventArgs.HostStartedEventArgs Arguments = new AIOEventArgs.HostStartedEventArgs();
+                        {
+                            Arguments.Host = Buffer.Split('#')[1].Split(' ')[0];
+                            Arguments.Guest = Regex.Replace(Buffer.Remove(Buffer.Length - 1, 1), "^@msg-id=host_on :tmi.twitch.tv NOTICE #[a-zA-Z0-9_]{3,25} :Now hosting ", "");
+                        }
+                        HostStarted(this, Arguments);
+                    }
+                    else if (Regex.IsMatch(Buffer, "^@msg-id=host_off :tmi.twitch.tv NOTICE #[a-zA-Z0-9_]{3,25} :Exited host mode."))
+                    {
+                        AIOEventArgs.HostEndedEventArgs Arguments = new AIOEventArgs.HostEndedEventArgs();
+                        {
+                            Arguments.Host = Buffer.Split('#')[1].Split(' ')[0];
+                        }
+                        HostEnded(this, Arguments);
                     }
                     else
                     {
@@ -905,6 +924,15 @@ namespace Alejo_Bot_V4_Core
             public string Message { get; set; }
             public string Username { get; set; }
             public Dictionary<string, string> Tags { get; set; }
+        }
+        public class HostStartedEventArgs : EventArgs
+        {
+            public string Host { get; set; }
+            public string Guest { get; set; }
+        }
+        public class HostEndedEventArgs : EventArgs
+        {
+            public string Host { get; set; }
         }
         public class UserJoinedChannelEventArgs : EventArgs
         {

@@ -5,3 +5,4 @@ d:\users\alejo\documents\visual studio 2017\Projects\Alejo_Bot V4 Core\Alejo_Bot
 d:\users\alejo\documents\visual studio 2017\Projects\Alejo_Bot V4 Core\Alejo_Bot V4 Core\obj\Debug\Alejo_Bot V4 Core.dll
 d:\users\alejo\documents\visual studio 2017\Projects\Alejo_Bot V4 Core\Alejo_Bot V4 Core\obj\Debug\Alejo_Bot V4 Core.pdb
 D:\Users\alejo\Documents\Visual Studio 2017\Projects\Alejo_Bot V4 Core\Alejo_Bot V4 Core\obj\Debug\Alejo_Bot V4 Core.csproj.CoreCompileInputs.cache
+D:\Users\alejo\Documents\Visual Studio 2017\Projects\Alejo_Bot V4 Core\Alejo_Bot V4 Core\obj\Debug\Alejo_Bot V4 Core.csprojResolveAssemblyReference.cache
